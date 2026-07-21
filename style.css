@@ -755,6 +755,33 @@ body {
     font-size: 0.85rem;
 }
 
+.cert-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.cert-tag {
+    background: rgba(243, 156, 18, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(243, 156, 18, 0.25);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.cert-tag:hover {
+    background: rgba(243, 156, 18, 0.2);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
 /* Download & QR Grid Layout */
 .download-grid {
     display: grid;
