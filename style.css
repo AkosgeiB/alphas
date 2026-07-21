@@ -1365,3 +1365,62 @@ body.light-theme .timeline::after {
         gap: 30px;
     }
 }
+
+/* Print Styles for PDF Export */
+@media print {
+    .navbar, .hero-actions, .download-section, .contact-section, .toast, .theme-toggle-btn, .nav-controls {
+        display: none !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #1e293b !important;
+        font-size: 11pt;
+    }
+
+    .hero-section {
+        padding: 20px 0;
+        min-height: auto;
+    }
+
+    .hero-title {
+        color: #0f172a !important;
+        font-size: 2rem;
+    }
+
+    .gradient-text {
+        background: none !important;
+        -webkit-text-fill-color: #0f172a !important;
+        color: #0f172a !important;
+    }
+
+    .hero-desc, .about-lead, .about-text {
+        color: #334155 !important;
+    }
+
+    .section {
+        padding: 25px 0 !important;
+    }
+
+    .skill-card, .timeline-panel, .edu-card, .cert-item {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #1e293b !important;
+        page-break-inside: avoid;
+    }
+
+    .cert-tag {
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+        border: 1px solid #94a3b8 !important;
+    }
+
+    .title-underline {
+        background: #0f172a !important;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+}
