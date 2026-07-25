@@ -636,6 +636,32 @@ body {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 }
 
+.timeline-bullets {
+    list-style: none;
+    margin-top: 15px;
+    padding-left: 0;
+}
+
+.timeline-bullets li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.timeline-bullets li::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
 .timeline-date {
     display: inline-block;
     color: var(--accent);
