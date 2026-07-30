@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fallback URL if running locally or not deployed yet
     let defaultUrl = window.location.href;
     if (defaultUrl.startsWith("file://")) {
-        defaultUrl = "https://alphas-kosgei-portfolio.vercel.app/"; // Professional placeholder
+        defaultUrl = "https://akosgei.vercel.app"; // Live production domain
     }
     
     // Set default input value
