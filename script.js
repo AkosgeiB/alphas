@@ -212,14 +212,23 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
-            const payload = {
-                access_key: "ddbb2a5c-0651-4633-97b9-acc39db85a60",
-                name: name,
-                email: email,
-                subject: subject,
-                message: message,
-                from_name: "Kosgei Alphas Portfolio"
-            };
+            const formData = new FormData(contactForm);
+            // Ensure access_key and from_name are explicitly set as clean single strings
+            formData.set("access_key", "ddbb2a5c-0651-4633-97b9-acc39db85a60");
+            formData.set("from_name", "Kosgei Alphas Portfolio");
+            formData.set("name", name);
+            formData.set("email", email);
+            formData.set("subject", subject);
+            formData.set("message", message);
+
+            const object = Object.fromEntries(formData);
+            // Clean up extra spaces or newlines from object fields
+            for (let key in object) {
+                if (typeof object[key] === "string") {
+                    object[key] = object[key].trim();
+                }
+            }
+            object.access_key = "ddbb2a5c-0651-4633-97b9-acc39db85a60";
 
             try {
                 const response = await fetch("https://api.web3forms.com/submit", {
@@ -228,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Content-Type": "application/json",
                         "Accept": "application/json"
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(object)
                 });
 
                 const data = await response.json();
