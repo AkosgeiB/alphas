@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSubmitForm = document.getElementById("btnSubmitForm");
     
     if (contactForm && btnSubmitForm) {
-        contactForm.addEventListener("submit", (e) => {
+        contactForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             
             const name = document.getElementById("formName").value.trim();
@@ -202,11 +202,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("Please fill in all required fields.");
                 return;
             }
-            
-            const accessKeyInput = contactForm.querySelector('input[name="access_key"]');
-            if (!accessKeyInput || accessKeyInput.value === "YOUR_WEB3FORMS_ACCESS_KEY") {
-                showToast("Please enter your Web3Forms Access Key in index.html to receive messages.");
-            }
+
+            const formData = new FormData(contactForm);
+            formData.append("access_key", "ddbb2a5c-0651-4633-97b9-acc39db85a60");
 
             const btnText = btnSubmitForm.querySelector(".btn-text");
             const btnSpinner = btnSubmitForm.querySelector(".btn-spinner");
@@ -217,33 +215,31 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
-            const formData = new FormData(contactForm);
-            
-            fetch("https://api.web3forms.com/submit", {
-                method: "POST",
-                body: formData
-            })
-            .then(async (response) => {
-                let json = await response.json();
-                if (response.status === 200 && json.success) {
-                    showToast("Thank you! Your message has been sent directly to Gmail.");
+            try {
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showToast("Success! Your message has been sent directly to Gmail.");
                     contactForm.reset();
                 } else {
-                    console.error("Web3Forms error:", json);
-                    showToast(json.message || "Form submission failed. Please check your Web3Forms key.");
+                    console.error("Web3Forms error:", data);
+                    showToast("Error: " + (data.message || "Failed to send message"));
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error("Network error:", error);
-                showToast("Network error. Please check your connection and try again.");
-            })
-            .finally(() => {
+                showToast("Something went wrong. Please try again.");
+            } finally {
                 if (btnText && btnSpinner) {
                     btnText.textContent = "Send Message";
                     btnSpinner.classList.add("hidden");
                 }
                 btnSubmitForm.disabled = false;
-            });
+            }
         });
     }
 });
