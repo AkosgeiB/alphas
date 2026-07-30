@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Contact Form Submission Handling (EmailJS & Web3Forms)
+    // Contact Form Submission Handling (EmailJS)
     const contactForm = document.getElementById("contactForm");
     const btnSubmitForm = document.getElementById("btnSubmitForm");
     
@@ -217,79 +217,32 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
-            // 1. EmailJS Method (Active)
-            if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && typeof emailjs !== "undefined") {
-                try {
-                    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-                    const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        from_name: name,
-                        from_email: email,
-                        reply_to: email,
-                        name: name,
-                        email: email,
-                        subject: subject,
-                        message: message,
-                        to_name: "Kosgei Alphas"
-                    });
-                    
-                    if (response.status === 200) {
-                        showToast("Success! Your message has been sent via EmailJS.");
-                        contactForm.reset();
-                    } else {
-                        throw new Error(response.text || "Failed to send message via EmailJS");
-                    }
-                } catch (err) {
-                    console.error("EmailJS Error:", err);
-                    showToast("EmailJS Error: " + (err.text || err.message || "Failed to send"));
-                } finally {
-                    if (btnText && btnSpinner) {
-                        btnText.textContent = "Send Message";
-                        btnSpinner.classList.add("hidden");
-                    }
-                    btnSubmitForm.disabled = false;
-                }
-                return;
-            }
-
-            // 2. Web3Forms Method (Default)
-            const formData = new FormData(contactForm);
-            formData.set("access_key", "ddbb2a5c-0651-4633-97b9-acc39db85a60");
-            formData.set("from_name", "Kosgei Alphas Portfolio");
-            formData.set("name", name);
-            formData.set("email", email);
-            formData.set("subject", subject);
-            formData.set("message", message);
-
-            const object = Object.fromEntries(formData);
-            for (let key in object) {
-                if (typeof object[key] === "string") {
-                    object[key] = object[key].trim();
-                }
-            }
-            object.access_key = "ddbb2a5c-0651-4633-97b9-acc39db85a60";
-
             try {
-                const response = await fetch("https://api.web3forms.com/submit", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(object)
+                if (typeof emailjs === "undefined") {
+                    throw new Error("EmailJS SDK failed to load. Please check your internet connection.");
+                }
+                
+                emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+                const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    from_name: name,
+                    from_email: email,
+                    reply_to: email,
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message,
+                    to_name: "Kosgei Alphas"
                 });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showToast("Success! Your message has been sent directly to Gmail.");
+                
+                if (response.status === 200) {
+                    showToast("Success! Your message has been sent directly to EmailJS.");
                     contactForm.reset();
                 } else {
-                    console.error("Web3Forms error:", data);
-                    showToast("Error: " + (data.message || "Failed to send message"));
+                    throw new Error(response.text || "Failed to send message.");
                 }
-            } catch (error) {
-                console.error("Network error:", error);
-                showToast("Something went wrong. Please try again.");
+            } catch (err) {
+                console.error("EmailJS Error:", err);
+                showToast("Error: " + (err.text || err.message || "Failed to send message."));
             } finally {
                 if (btnText && btnSpinner) {
                     btnText.textContent = "Send Message";
