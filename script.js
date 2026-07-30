@@ -203,9 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const formData = new FormData(contactForm);
-            formData.append("access_key", "ddbb2a5c-0651-4633-97b9-acc39db85a60");
-
             const btnText = btnSubmitForm.querySelector(".btn-text");
             const btnSpinner = btnSubmitForm.querySelector(".btn-spinner");
             
@@ -215,10 +212,23 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
+            const payload = {
+                access_key: "ddbb2a5c-0651-4633-97b9-acc39db85a60",
+                name: name,
+                email: email,
+                subject: subject,
+                message: message,
+                from_name: "Kosgei Alphas Portfolio"
+            };
+
             try {
                 const response = await fetch("https://api.web3forms.com/submit", {
                     method: "POST",
-                    body: formData
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await response.json();
