@@ -185,9 +185,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Contact Form Submission Handling via Web3Forms
+    // Contact Form Submission Handling (EmailJS & Web3Forms)
     const contactForm = document.getElementById("contactForm");
     const btnSubmitForm = document.getElementById("btnSubmitForm");
+    
+    // EMAILJS CONFIGURATION
+    // If you wish to use EmailJS instead of Web3Forms, fill in your EmailJS credentials here:
+    const EMAILJS_PUBLIC_KEY = "";  // e.g., "user_xxxxxxxxxxxx"
+    const EMAILJS_SERVICE_ID = "";  // e.g., "service_xxxxxxx"
+    const EMAILJS_TEMPLATE_ID = ""; // e.g., "template_xxxxxxx"
     
     if (contactForm && btnSubmitForm) {
         contactForm.addEventListener("submit", async (e) => {
@@ -212,8 +218,39 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
+            // 1. EmailJS Method (if keys are provided)
+            if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && typeof emailjs !== "undefined") {
+                try {
+                    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+                    const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        from_name: name,
+                        from_email: email,
+                        subject: subject,
+                        message: message,
+                        to_name: "Kosgei Alphas"
+                    });
+                    
+                    if (response.status === 200) {
+                        showToast("Success! Your message has been sent via EmailJS.");
+                        contactForm.reset();
+                    } else {
+                        throw new Error(response.text || "Failed to send message via EmailJS");
+                    }
+                } catch (err) {
+                    console.error("EmailJS Error:", err);
+                    showToast("EmailJS Error: " + (err.text || err.message || "Failed to send"));
+                } finally {
+                    if (btnText && btnSpinner) {
+                        btnText.textContent = "Send Message";
+                        btnSpinner.classList.add("hidden");
+                    }
+                    btnSubmitForm.disabled = false;
+                }
+                return;
+            }
+
+            // 2. Web3Forms Method (Default)
             const formData = new FormData(contactForm);
-            // Ensure access_key and from_name are explicitly set as clean single strings
             formData.set("access_key", "ddbb2a5c-0651-4633-97b9-acc39db85a60");
             formData.set("from_name", "Kosgei Alphas Portfolio");
             formData.set("name", name);
@@ -222,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.set("message", message);
 
             const object = Object.fromEntries(formData);
-            // Clean up extra spaces or newlines from object fields
             for (let key in object) {
                 if (typeof object[key] === "string") {
                     object[key] = object[key].trim();
