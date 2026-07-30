@@ -457,7 +457,12 @@
                 </div>
                 <!-- Contact Form Card -->
                 <div class="contact-form-card">
-                    <form id="contactForm" class="contact-form">
+                    <form id="contactForm" class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                        <!-- Web3Forms Access Key (Replace with your actual key from web3forms.com) -->
+                        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+                        <input type="hidden" name="from_name" value="Kosgei Alphas Portfolio">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="formName">Full Name</label>

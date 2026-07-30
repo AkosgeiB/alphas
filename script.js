@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Contact Form Submission Handling
+    // Contact Form Submission Handling via Web3Forms
     const contactForm = document.getElementById("contactForm");
     const btnSubmitForm = document.getElementById("btnSubmitForm");
     
@@ -199,10 +199,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const message = document.getElementById("formMessage").value.trim();
             
             if (!name || !email || !subject || !message) {
-                showToast("Please fill in all fields.");
+                showToast("Please fill in all required fields.");
                 return;
             }
             
+            const accessKeyInput = contactForm.querySelector('input[name="access_key"]');
+            if (!accessKeyInput || accessKeyInput.value === "YOUR_WEB3FORMS_ACCESS_KEY") {
+                showToast("Please enter your Web3Forms Access Key in index.html to receive messages.");
+            }
+
             const btnText = btnSubmitForm.querySelector(".btn-text");
             const btnSpinner = btnSubmitForm.querySelector(".btn-spinner");
             
@@ -211,17 +216,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 btnSpinner.classList.remove("hidden");
             }
             btnSubmitForm.disabled = true;
+
+            const formData = new FormData(contactForm);
             
-            setTimeout(() => {
+            fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status === 200 && json.success) {
+                    showToast("Thank you! Your message has been sent directly to Gmail.");
+                    contactForm.reset();
+                } else {
+                    console.error("Web3Forms error:", json);
+                    showToast(json.message || "Form submission failed. Please check your Web3Forms key.");
+                }
+            })
+            .catch((error) => {
+                console.error("Network error:", error);
+                showToast("Network error. Please check your connection and try again.");
+            })
+            .finally(() => {
                 if (btnText && btnSpinner) {
                     btnText.textContent = "Send Message";
                     btnSpinner.classList.add("hidden");
                 }
                 btnSubmitForm.disabled = false;
-                
-                contactForm.reset();
-                showToast("Thank you! Your message has been sent successfully.");
-            }, 1500);
+            });
         });
     }
 });
