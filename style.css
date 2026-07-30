@@ -290,6 +290,7 @@ body {
 .hero-actions {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -1249,6 +1250,51 @@ body {
     color: var(--accent);
 }
 
+.whatsapp-icon-box {
+    color: #25D366 !important;
+}
+
+.contact-detail-item:hover .whatsapp-icon-box {
+    border-color: #25D366 !important;
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.3) !important;
+}
+
+.contact-action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.btn-whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff !important;
+    border: 2px solid transparent;
+    font-weight: 600;
+}
+
+.btn-whatsapp:hover {
+    background: linear-gradient(135deg, #22bf5b 0%, #0f7a6e 100%);
+    color: #ffffff !important;
+    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-call {
+    background-color: var(--accent);
+    color: #121214 !important;
+    border: 2px solid transparent;
+    font-weight: 600;
+}
+
+.btn-call:hover {
+    background-color: transparent;
+    color: var(--accent) !important;
+    border-color: var(--accent);
+    box-shadow: 0 5px 20px var(--accent-glow);
+    transform: translateY(-2px);
+}
+
 .contact-form-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -1387,6 +1433,14 @@ body.light-theme .timeline::after {
         width: 100%;
     }
     
+    .contact-action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    .contact-action-buttons .btn {
+        width: 100%;
+    }
+
     .footer-container {
         gap: 30px;
     }
