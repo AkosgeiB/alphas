@@ -190,10 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSubmitForm = document.getElementById("btnSubmitForm");
     
     // EMAILJS CONFIGURATION
-    // If you wish to use EmailJS instead of Web3Forms, fill in your EmailJS credentials here:
-    const EMAILJS_PUBLIC_KEY = "";  // e.g., "user_xxxxxxxxxxxx"
-    const EMAILJS_SERVICE_ID = "";  // e.g., "service_xxxxxxx"
-    const EMAILJS_TEMPLATE_ID = ""; // e.g., "template_xxxxxxx"
+    const EMAILJS_PUBLIC_KEY = "L4PuLzWo2s64exZ2m";
+    const EMAILJS_SERVICE_ID = "service_7eg3cbx";
+    const EMAILJS_TEMPLATE_ID = "template_1c9y1tp";
     
     if (contactForm && btnSubmitForm) {
         contactForm.addEventListener("submit", async (e) => {
@@ -218,13 +217,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             btnSubmitForm.disabled = true;
 
-            // 1. EmailJS Method (if keys are provided)
+            // 1. EmailJS Method (Active)
             if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && typeof emailjs !== "undefined") {
                 try {
                     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
                     const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
                         from_name: name,
                         from_email: email,
+                        reply_to: email,
+                        name: name,
+                        email: email,
                         subject: subject,
                         message: message,
                         to_name: "Kosgei Alphas"
